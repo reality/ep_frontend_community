@@ -108,4 +108,4 @@ Now you can login with credentials:
 
 
 #### Create a Plugin
-See https://github.com/Pita/etherpad-lite/wiki/Creating-a-plugin   [Step 5 Install plugin])
+See https://github.com/ether/etherpad-lite/wiki/Creating-a-plugin  [Step 5 Install plugin])
