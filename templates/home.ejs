@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title lang="en">Etherpad</title>
+		<link type="text/css" href="./static/plugins/ep_frontend_community/static/css/styles.less" rel="stylesheet/less"/>
+		<script src="./static/plugins/ep_frontend_community/static/js/client/less.js" type="text/javascript"></script>
+		<script src="./static/plugins/ep_frontend_community/static/js/client/jquery.js" type="text/javascript"></script>
+		<script src="./static/plugins/ep_frontend_community/static/js/client/retina.js" type="text/javascript"></script>
+    	<script src="./static/plugins/ep_frontend_community/static/js/client/etherpad.js" type="text/javascript"></script>
+    </head>
+    <body>
+    	<div id="wrapper">
+    		 <header>
+    		 	<div class="inside">
+    		 		<nav id="mainMenu">
+	    		 		<ul>
+	    		 			<li><span class="active" lang="en">Home</span></li>
+	    		 			<li class="separator">|</li>
+						<!-- ckubu: removed
+							<li><a href="pads.html" lang="en">Public Pads</a></li>
+							<li class="separator">|</li>
+						-->
+						<!-- ckubu: changed
+
+							Pad Admins will get an other Menue
+
+						-->
+							<% if ( 1  == isadmin ) {%>
+	    		 				<li><a href= "groups.html" lang="en">Manage User / Groups</a></li>
+							<% } else { %>
+	    		 				<li><a href= "groups.html" lang="en">My Groups</a></li>
+							<% } %>
+	    		 			<li class="separator">|</li>
+	    		 			<li><a href="help.html" lang="en">Help</a></li>
+	    		 		</ul>
+	    		 	</nav>
+	    		 	<nav id="sekMenu">
+	    		 		<ul>
+    		 				<li><a lang="en" id="userProfile"><%= username %></a></li>
+    		 				<li class="separator">|</li>
+    		 				<li><a href="#" lang="en" id = "logout">Logout</a></li>
+    		 			</ul>
+	    		 	</nav>
+				<!-- ckubu changed:
+
+					correct src in img-tag ( from ./static/plugins.. to ./../static/plugins..)
+				-->
+    		 		<img src="./../static/plugins/ep_frontend_community/static/images/logo.png" alt="Etherpad" id="logo">  
+    		 	</div>
+    		 </header>
+       		 <div id="main">
+       		 	<div class="inside">
+	       		 	<span id="loggedInTitle" lang="en">University Pad</span>
+					<!-- ckubu: removed
+
+	       		 	<span id="loggedInSubtitle" lang="en"><br>Work with Pads alone or in groups, public or private.<br> To create a private Pad you first have to create a private Group.</p></span>
+					-->
+	       		 	<div class="leftArea">
+	       		 		<div class="headline">
+							<!-- ckubu: changed 
+
+								inside ing-tag: from "Public Pad" to "Public Pads are not allowed"
+							-->
+	       		 			<img src="./static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Register"><h1 class="red"lang="en">Public Pads are not allowed</h1>
+	       		 		</div>
+						<!-- ckubu removed:
+	       		 		<div class="headline">
+	       		 			<img src="./static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Register"><h1 lang="en">Public Pad</h1>
+	       		 		</div>
+	       		 		<h4 lang="en">Open a Public Pad by Name</h4>
+	       		 		<form>
+	       		 			<input type="text" placeholder="Pad-Name" id="openPadName">
+	       		 			<button type="submit" lang="en" id="openPublicPad">Open</button>
+	       		 		</form>
+						-->
+	       		 	</div>
+	       		 	<div class="rightArea">
+	       		 		<div class="headline">
+	       		 			<img src="./static/plugins/ep_frontend_community/static/images/users-cyan-32.png" class="headlineImage" alt="Register"><h1 lang="en">Private Groups</h1>
+	       		 		</div>
+						<!-- ckubu: removed
+
+	       		 		<h4 lang="en">Create new Groups and open your recently used Groups</h4>
+	       		 		<form id="createPrivateGroupForm">
+	       		 			<input type="text" placeholder="Group-Name" id="groupName" autocomplete=off>
+	       		 			<button type="submit" lang="en" id="createPrivateGroup">Create</button>
+	       		 		</form>
+						-->
+	       		 		<div id="quickGroupMenu">
+							<h3 lang="en">Open my recently used Groups</h3>
+	       		 				<%if (groups.length >= 6) {%> 
+									<ul>
+	       		 					<% for(var i = 0; i < 6; i++){ %>
+	       		 						<li><a href="group.html/<%= groups[i].groupID%>" lang="en"><%= groups[i].name %></a></li>
+	       		 					<% } %>
+			       		 			</ul>	       		 			
+	       		 				 <%} else if (groups.length < 6 && groups.length > 0) {%>
+	       		 				 	<ul>
+	       		 					<% for(var i = 0; i < groups.length; i++){ %>
+	       		 						<li><a href="group.html/<%= groups[i].groupID%>" lang="en"><%= groups[i].name %></a></li>
+	       		 					<% } %>
+			       		 			</ul>
+	       		 				 <%} else {%>
+	       		 					<h4 class="red" lang="en">You are in no Group at the moment.</h4>
+	       		 				<%}%>
+	       		 				
+	       		 		</div>
+	       		 	</div>
+	       		 	<div style="clear: both"></div>
+       		 	</div>
+       		 </div>
+       		 <footer>
+       		 	<div class="inside">
+       		 		<p lang="en"><a href="./imprint.html">Imprint</a></p>
+       		 	</div>
+       		 </footer>
+    	</div>
+    </body>
+</html>

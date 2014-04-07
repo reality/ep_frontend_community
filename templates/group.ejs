@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title lang="en">Etherpad</title>
+		<link type="text/css" href="./../static/plugins/ep_frontend_community/static/css/styles.less" rel="stylesheet/less"/>
+		<script src="./../static/plugins/ep_frontend_community/static/js/client/less.js" type="text/javascript"></script>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+		<script src="./../static/plugins/ep_frontend_community/static/js/client/jquery.js" type="text/javascript"></script>
+		<script src="./../static/plugins/ep_frontend_community/static/js/client/documentReadyRefresh.js" type="text/javascript"></script>
+		<script src="./../static/plugins/ep_frontend_community/static/js/client/retina.js" type="text/javascript"></script>
+		<script src="./../static/plugins/ep_frontend_community/static/js/client/etherpad.js" type="text/javascript"></script>
+    </head>
+    <body>
+    	<div id="wrapper">
+    		 <header>
+    		 	<div class="inside">
+    		 		<nav id="mainMenu">
+	    		 		<ul>
+	    		 			<li><a href="../home.html" lang="en">Home</a></li>
+	    		 			<li class="separator">|</li>
+							<!-- ckubu: removed
+
+								<li><a href="../pads.html" lang="en">Public Pads</a></li>
+								<li class="separator">|</li>
+							-->
+						<!-- ckubu: changed
+
+							Pad Admins will get an other Menue
+
+						-->
+							<% if ( 1  == isadmin ) {%>
+	    		 				<li><a href= "../groups.html" lang="en">Manage User / Groups</a></li>
+							<% } else { %>
+	    		 				<li><a href= "../groups.html" lang="en">My Groups</a></li>
+							<% } %>
+	    		 			<li class="separator">|</li>
+	    		 			<li><a href="../help.html" lang="en">Help</a></li>
+	    		 		</ul>
+	    		 	</nav>
+	    		 	<nav id="sekMenu">
+	    		 		<ul>
+    		 				<li><a lang="en" id="userProfile"><%= username %></a></li>
+    		 				<li class="separator">|</li>
+    		 				<li><a href="#" lang="en" id = "logout">Logout</a></li>
+    		 			</ul>
+	    		 	</nav>
+				<!-- ckubu changed:
+
+					correct src in img-tag ( from ./static/plugins.. to ./../static/plugins..)
+				-->
+				<img src="./../static/plugins/ep_frontend_community/static/images/logo.png" alt="Etherpad" id="logo">  
+    		 	</div>
+    		 </header>
+    		 <div id="groupNav">
+    		 	<div class="inside">
+    		 		<nav>
+    		 			<ul>
+    		 				<li><a href="../groups.html" lang="en">My Groups</a></li>
+    						<li class="smallSeparator">-</li>
+    	 					<li><span lang="en">Group:  <%= id %></span></li>
+   		 				</ul>
+   		 			</nav>
+   		 			<div style="clear: both"></div>
+    		 	</div>	
+    		 </div>    
+       		 <div id="main">
+       		 	<div class="inside">
+       		 		<div class="headlineGroup">
+		       			<img src="./../static/plugins/ep_frontend_community/static/images/users-cyan-64.png" class="headlineGroupImage" alt="GruppeMID<%= id %>"><h1 lang="en"><%= id %></h1>
+		       		</div>
+	       		 	<div class="leftArea">
+	       		 		<div class="inputBlock marginTop">
+		       		 		<div class="headline">
+		       		 			<img src="./../static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Create Private Group Pad"><h1 lang="en">Create Private Group Pad</h1>
+		       		 		</div>
+		       		 		<h4 lang="en">Add a Private Pad to this Group</h4>
+		       		 		<form id="createPrivatePadForm">
+		       		 			<input  type="text" placeholder="Pad-Name" id="createGroupPad" autocomplete="off">
+		       		 			<button data-groupid="<%= groupid %>" type="submit" lang="en" id="createPrivateGroupPad">Create</button>
+		       		 		</form>
+		       		 	</div>
+
+		       		 	<div class="inputBlock marginBottom">
+		       		 		<div class="headline">
+		       		 			<img src="./../static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Register"><h1 lang="en">Manage Private Group Pads</h1>
+		       		 		</div>
+		       		 		<h4 lang="en">Manage Private Pads of this Group</h4>
+		       		 		<% if (pads.length > 0) { %>
+		       		 		<form style="margin-bottom:5px"><input type="text" data-groupid="<%=groupid%>" id="search" placeholder="Search"></input></form>
+							<!-- ckubu changed:
+
+								change from 
+									"style="height: 157px" 
+								to 
+									style="height: 200px"
+							--> 
+							<div class="tableview" style="height: 200px; overflow: hidden">
+		       		 		<table id = "tablePads">
+		       		 			<% for(var i = 1; i <= pads.length; i++){%>
+		       		 				<%if (i%2 == 1) {%>
+		       		 					<tr class="odd visible" id="Pad<%=i%>">
+		       		 						<td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=pads[i-1].name%>"><%= pads[i-1].name%></a></td>
+		       		 						<td class="editDate"><%=pads[i-1].lastedit%></td>
+		       		 						<!--<td><img title="<%=pads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(pads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(pads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td> -->
+												<!-- ckubu: changed  
+
+													changed from
+														if (isowner)
+													to
+														if (isowner || pads[i-1].ownerid == userid || isadmin )
+												-->
+                                    <% if (isowner || pads[i-1].ownerid == userid || isadmin ) {%>
+		       		 							<td title="Delete Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
+												<!-- ckubu add
+
+													add deactivate icom
+												-->
+                                    <%} else {%>
+                                       <td title="Only the owner can delete this pad" class="last"><img src="./../static/plugins/ep_frontend_community/static/images/close-cyan-12.png"></td>
+                                    <%}%>
+		       		 					</tr>
+		       		 				<%} else {%>
+		       		 					<tr class="visible" id="Pad<%=i%>">
+		       		 						<td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=pads[i-1].name%>"><%= pads[i-1].name%></a></td>
+		       		 						<td class="editDate"><%=pads[i-1].lastedit%></td>
+		       		 						<!--  <td><img title="<%=pads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(pads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(pads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td>-->
+												<!-- ckubu: changed  
+
+													changed from
+														if (isowner)
+													to
+														if (isowner || pads[i-1].ownerid == userid || isadmin )
+												-->
+                                    <% if (isowner || pads[i-1].ownerid == userid || isadmin ) {%>
+		       		 							<td title="Delete Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
+												<!-- ckubu add
+
+													add deactivated icon
+												-->
+                                    <%} else {%>
+                                       <td title="Only the owner can delete this pad" class="last"><img src="./../static/plugins/ep_frontend_community/static/images/close-cyan-12.png"></td>
+                                    <%}%>
+		       		 					</tr>
+		       		 				<%}%>
+		       		 			<% } %>	
+		       		 		</table>
+							</div>
+							<div class="navigationInfo"><span id="previousPage"><<</span> <span id="currentPage"></span> to <span id="currentPageCount"></span> of <span id="pageCount"></span> Pads <span id="nextPage">>></span></div>
+		       		 		<%} else {%>
+		       		 			<h4 class="red" lang="en">There are no Pads in this group at the moment.</h4>	
+		       		 		<% } %>
+		       		 	</div>
+	       		 	</div>
+	       		 	<div class="rightArea">
+	       		 		<img src="./../static/plugins/ep_frontend_community/static/images/pad-illustration-private.png" alt="Public Pads" class="padIllustration">
+	       		 	</div>
+	       		 	<div style="clear: both"></div>
+       		 	</div>
+       		 </div>
+       		 <footer>
+       		 	<div class="inside">
+       		 		<p lang="en"><a href="./../imprint.html">Imprint</a></p>
+       		 	</div>
+       		 </footer>
+       		 <script>
+       		var getBaseURL = function(slice,cb){
+       			var  loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
+       					: 80)
+       					: loc.port, url = loc.protocol + "//"
+       					+ loc.hostname +":"+ loc.port, pathComponents = location.pathname
+       					.split('/'),
+       			// Strip admin/plugins
+       			baseURL = pathComponents.slice(0,
+       					pathComponents.length - slice).join('/')
+       					+ '/';
+       			
+       			url = url + baseURL;
+       			console.log(">>>>>");
+       			console.log(url);
+       			console.log("<<<<<<<<<");
+       			cb(url);
+       		};
+
+    		$(document).ready(function(){  			
+    			$(".delete").click(function(){
+    				$("#wrapper").append('<div id="overlay"></div>');
+    				$("#wrapper").append('<div id="lightBox"><div id="lightBoxHeader"'+
+    						'><span class="close"><img src="./../static/plugins/ep_frontend_community/static/images/close-cyan-12.png"'+
+    						'></span></div><div id="lightBoxMain">'+
+    						'<div class="headline"><img src="./../static/plugins/ep_user_'+
+    						'pad_frontend/static/images/close-red-32.png" class="headlineImage"'+
+    						'alt="Delete"><h1 lang="en" class="red">Delete "'+ $(this).data('padname') + '"'+
+    						'</h1></div><div class="content"><button lang="en" class="marginRight" id="deletePadButton"'+
+    		   				'data-padname="'+$(this).data('padname')+'" data-groupid="'+$(this).data('groupid')+
+    		   				'">'+
+    						'Delete</button><button lang="en" id = "cancelDelete">Cancel</button></div></div></div>');
+    				$("#lightBox").css("margin-top",-$("#lightBox").height()/2);
+
+    			
+    				$(".close").click(function(){
+    					$("#overlay").remove();
+    					$("#lightBox").remove();
+    				});
+    		   		$("#cancelDelete").click(function(){
+    		   			$("#overlay").remove();
+    		   			$("#lightBox").remove();
+    		   		});
+    		   		
+    		   	 $("#deletePadButton").click(function(){
+    		  	    	var data = {};
+    		  			getBaseURL(2,function(baseurl){
+    		  				var loc = document.location;
+    		  				url = baseurl;
+	    		  	    	data.groupId = $("#deletePadButton").data('groupid');
+	    		  			data.padName = $("#deletePadButton").data('padname');
+	    		  	    	
+
+	    		  			$.ajax({
+	    		  				type: 'POST',
+	    		  				data: JSON.stringify(data),
+	    		  				contentType: 'application/json',
+	    		  				url: url + 'deletePad',	
+	    		  				success: function(data) {
+	    		  						if(data.success){
+	    		  							window.location = loc;
+	    		  						}else{
+	    		  							console.log(data.error);
+	    		  						}	
+	    		  				},
+	    		  				error: function (xhr, ajaxOptions, thrownError) {
+	    		  					console.log(thrownError);
+	    		  				}
+	    		  			});
+    		  			});
+    		  	    });
+    			});
+
+    		    	
+    			
+			});
+
+    	</script>
+    	</div>
+    </body>
+</html>

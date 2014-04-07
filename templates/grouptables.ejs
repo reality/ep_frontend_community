@@ -1,0 +1,29 @@
+		       		 		<%if (groups.length > 0) {%> 
+		       		 				<% for(var i = 1; i <= groups.length; i++){%>
+		       		 					<%if (i%2 == 1) {%>
+		       		 						<tr class="odd" id="Gruppe<%= groups[i-1].groupID%>" data-role="<%= groups[i-1].Role%>">
+		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>"><%= groups[i-1].name%></a></td>
+		       		 							<td class="role"><%if (groups[i-1].Role == 1) {%>Owner<%} else {%>User<%}%></td>
+		       		 							<td title="User Management"><img name="<%=groups[i-1].groupID%>" src="./static/plugins/ep_frontend_community/static/images/users-gold-16.png" class="groupDetails"></img></td>
+		       		 							<%if (groups[i-1].Role == 1) {%>
+		       		 								<td title="Delete Group" class="last"><img id="<%=groups[i-1].groupID%>" title="<%=groups[i-1].name%>" src="./static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></img></td>
+		       		 							<%} else {%>
+		       		 								<td class="last"></td>
+		       		 							<%}%>
+		       		 						</tr>
+		       		 					<%} else {%>
+		       		 						<tr id="Gruppe<%= groups[i-1].groupID%>" data-role="<%= groups[i-1].Role%>">
+		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>"><%= groups[i-1].name%></a></td>
+		       		 							<td class="role"><%if (groups[i-1].Role == 1) {%>Owner<%} else {%>User<%}%> </td>
+		       		 							<td title="User Management"><img name="<%=groups[i-1].groupID%>" src="./static/plugins/ep_frontend_community/static/images/users-gold-16.png" class="groupDetails"></img></td>
+		       		 							<%if (groups[i-1].Role == 1) {%>
+		       		 								<td title="Delete Group" class="last"><img id="<%=groups[i-1].groupID%>" title="<%=groups[i-1].name%>" src="./static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></img></td>
+		       		 							<%} else {%>
+		       		 								<td class="last"></td>
+		       		 							<%}%>
+		       		 						</tr>
+		       		 					<%}%>
+		       		 				<% } %>
+		       		 		<%} else {%>
+		       		 			<a style="color:red">No Groups found.</a>	
+	       		 			<%}%>	

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title lang="en">Etherpad</title>
+        <link type="text/css" href="./../../../static/plugins/ep_frontend_community/static/css/styles.less" rel="stylesheet/less"/>
+        <script src="./../../../static/plugins/ep_frontend_community/static/js/client/less.js" type="text/javascript"></script>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+        <script src="./../../../static/plugins/ep_frontend_community/static/js/client/jquery.js"  type="text/javascript"></script>
+        <script src="./../../../static/plugins/ep_frontend_community/static/js/client/documentReadyRefresh.js" type="text/javascript"></script>
+        <script src="./../../../static/plugins/ep_frontend_community/static/js/client/retina.js" type="text/javascript"></script>
+    </head>
+    <body>
+    	<div id="wrapper">
+    		 <header>
+    		 	<div class="inside">
+    		 		<nav id="mainMenu">
+	    		 		<ul>
+	    		 			<li><a href="../../../home.html" lang="en">Home</a></li>
+	    		 			<li class="separator">|</li>
+						<!-- ckubu: removed
+	    		 			<li><a href="../../../pads.html" lang="en">Public Pads</a></li>
+	    		 			<li class="separator">|</li>
+						-->
+	    		 			<li><a href="../../../groups.html" lang="en">My Groups</a></li>
+	    		 			<li class="separator">|</li>
+	    		 			<li><a href="../../../help.html" lang="en">Help</a></li>
+	    		 		</ul>
+	    		 	</nav>
+	    		 	<nav id="sekMenu">
+	    		 		<ul>
+    		 				<li><a lang="en" id="userProfile"><%= username %></a></li>
+    		 				<li class="separator">|</li>
+    		 				<li><a href="#" lang="en">Logout</a></li>
+    		 			</ul>
+	    		 	</nav>
+				<!-- ckubu changed:
+
+					correct src in img-tag ( from ./static/plugins.. to ./../static/plugins..)
+				-->
+    		 		<img src="./../static/plugins/ep_frontend_community/static/images/logo.png" alt="Etherpad" id="logo">  	
+    		 	</div>
+    		 </header>
+    		 <div id="minMax">
+    		 	<div id="minimize"><img src="./../../../static/plugins/ep_frontend_community/static/images/arrowup-orange-16.png" id="minMaxArrow"></div>
+    		 	<div id="maximize" style="display:none"><img src="./../../../static/plugins/ep_frontend_community/static/images/arrowdown-orange-16.png" id="minMaxArrow"></div>
+    		 </div>
+    		 <div id="groupNav">
+    		 	<div class="inside">
+    		 		<nav>
+    		 			<ul>
+    		 				<li><a href="groups.html" lang="en">My Groups</a></li>
+    						<li class="smallSeparator">-</li>
+    	 					<li><a href="group.html" lang="en">Group <%= groupName %></a></li>
+    	 					<li class="smallSeparator">-</li>
+    	 					<li><span lang="en"><%= padname %></span></li>
+   		 				</ul>
+   		 			</nav>
+   		 			<div style="clear: both"></div>
+    		 	</div>	
+    		 </div>
+    		 <div id="main" >
+       		 	
+       		 </div> 
+       		 	
+       		 <footer>
+       		 	<div class="inside">
+       		 		<p lang="en"><a href="./../../../imprint.html">Imprint</a></p>
+       		 	</div>
+       		 </footer>
+       		   
+    	</div>
+    	<script>
+    	function post(data,url , cb){
+    		
+    		$.ajax({
+    				type: 'POST',
+    				data: JSON.stringify(data),
+    				contentType: 'application/json',
+    				url: url,	
+    				success: function(data) {
+    					console.log('success');	
+    					cb(data);
+    				},
+    				error: function (xhr, ajaxOptions, thrownError) {
+    					console.log('no success');
+    					console.log(thrownError);
+    					cb(null);
+    				}
+    		});	
+    	};
+    	
+    	var getBaseURL = function(cb){
+    		var  loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
+    				: 80)
+    				: loc.port, url = loc.protocol + "//"
+    				+ loc.hostname +":"+ loc.port, pathComponents = location.pathname
+    				.split('/'),
+    		// Strip admin/plugins
+    		baseURL = pathComponents.slice(0,
+    				pathComponents.length - 4).join('/')
+    				+ '/';
+    		console.log(baseURL);
+    		url = url + baseURL;
+    		cb(url)
+    	}
+    	
+    	$(document).ready(function(){
+       		$("#wrapper").append('<div id="overlay"></div>');
+        	$("#wrapper").append('<div id="lightBox"><div id="lightBoxHeader"></div><div id="lightBoxMain"><div class="headline"><img src="./../../../static/plugins/ep_frontend_community/static/images/user-32.png" class="headlineImage" alt="Login"><h1 lang="en">Login</h1></div><div class="content"><div class="overlayLoginArea"><div class="overlayLoginArea"><h3 lang="en">Etherpad Account</h3><button id="loginEtherpad" lang="en">Login</button></div><div style="clear:both"></div></div></div></div>');
+        	// center the lightBox
+        	$("#lightBox").css("margin-top",-$("#lightBox").height()/2);
+        				
+        	// click-event for the closing of the lightBox
+        				
+       		// when the etherpad account login is chosen, the ehterpad login screen appears in the lightBox 
+       		$("#loginEtherpad").click(function(){
+        		$("#lightBox").remove();
+       				
+    			$("#wrapper").append('<div id="lightBox"><div id="lightBoxHeader"></div><div id="lightBoxMain"><div class="headline"><img src="./../../../static/plugins/ep_frontend_community/static/images/user-32.png" class="headlineImage" alt="Login"><h1 lang="en">Login Etherpad Account</h1></div><div class="content"> \
+        							  <form id="formEtherpadLogin">\
+        	  					 	  <div class="inputField"><input type="text" name="email" id="email" placeholder="E-Mailaddress" class="smallMarginBottom"></div>\
+        					 	 	  <div class="inputField"><input type="password" name="password" id="password" placeholder="Password" class="smallMarginBottom"></div>\
+        							  <button type="submit" id="overlayLogin" lang="en">Login</button>\
+        							  </form></div></div></div>');    					
+        		$("#lightBox").css("margin-top",-$("#lightBox").height()/2);
+        					    				
+        		// click-event for the closing of the lightBox
+
+        					
+        		// validation of the login
+        		// TODO: correct reaction on the validation
+        		$("#formEtherpadLogin").submit(function(e) {
+        			e.preventDefault();
+        			if(validate("#formEtherpadLogin"))
+        				return false;
+    				var data = {};
+    				data.email = $("#email").val();
+    				data.password = $("#password").val();
+    				var url;
+    				getBaseURL(function(baseurl){
+    					url = baseurl;
+    					data.url = baseurl;
+    					$.ajax({
+    						type: 'POST',
+    						data: JSON.stringify(data),
+    						contentType: 'application/json',
+    						url: url + 'login',	
+    						success: function(data) {
+    								if(data.success){
+    									url = baseurl;
+    									data.location = url;
+    									data.groupId = '<%= groupID %>';
+    									data.padname = '<%= padname %>';
+    									post(data, url+'directToPad' ,function(data){
+    										if(data.success){
+    											document.cookie = "sessionID="+ data.session +"; path=/";
+    											location.reload();
+    										}else{
+    											location.reload();
+    										}
+    									});
+    									
+    								}else{
+    									$("#formEtherpadLogin input").each(function(){
+    										if($(this).next().hasClass("errorRight"))
+    											$(this).next().remove();
+    										if($(this).is('#email') && !$(this).next().hasClass("errorRight") && (data.error == 'No registered User' ))
+    											$(this).parent().append('<div class="errorRight"><img src="./static/plugins/ep_frontend_community/static/images/arrowleft-red-16.png" class="arrowleft"><span class="white" lang="en">' + data.error +'</span></div>');
+    										if($(this).is('#password') && !$(this).next().hasClass("errorRight") && data.error == 'Password is wrong')
+    											$(this).parent().append('<div class="errorRight"><img src="./static/plugins/ep_frontend_community/static/images/arrowleft-red-16.png" class="arrowleft"><span class="white" lang="en">' + data.error +'</span></div>');
+    									});
+    								};	
+    						},
+    						error: function (xhr, ajaxOptions, thrownError) {
+    							console.log(thrownError);
+    						}
+    					});
+    				});
+      			});
+      		});
+       	    function validate(tag) {
+       			$(tag + " input").each(function(){
+       				if($(this).val().length < 1) {
+       					if(!$(this).next().hasClass("errorRight")) {
+       						$(this).parent().append('<div class="errorRight"><img src="./static/plugins/ep_frontend_community/static/images/arrowleft-red-16.png" class="arrowleft"><span class="white" lang="en">Field is required!</span></div>');
+       					}
+       				} else {
+       					$(this).next().remove();
+       				}
+       			});
+       			return false;
+       		}
+    	});
+    	</script>
+    </body>
+</html>

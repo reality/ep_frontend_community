@@ -1,0 +1,37 @@
+{
+  "name": "ep_frontend_community",
+  "version": "0.0.1",
+  "description": "A closed pad system, with no public pads. The pad system is aranged in groups, evry pad is assigned to a group, just as users. Users can edit any pad of their groups and also create new group pads. This is also a frontend to manage users and groups.",
+  "main": "hooks.js",
+  "dependencies": {
+    "formidable": "1.0.14",
+    "connect": "2.4.x",
+    "emailjs": "0.3.4",
+    "crypto": "0.0.3",
+    "nodemailer": "0.5.2",
+    "mysql": "2.0.0-alpha9",
+    "express": "3.2.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ckubu/ep_frontend_community"
+  },
+  "keywords": [
+    "etherpad-lite",
+    "ep frontend",
+    "user-management",
+    "group pads"
+  ],
+  "author": {
+    "name": "Christoph Kuchenbuch",
+    "email": "ckubu@oopen.de"
+  },
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/ckubu/ep_frontend_community/issues"
+  },
+  "homepage": "https://github.com/ckubu/ep_frontend_community",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

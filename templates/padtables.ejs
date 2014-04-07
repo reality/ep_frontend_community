@@ -1,0 +1,21 @@
+		       		 			<% if (noresults) {%>
+		       		 			<h4 style="color:red" lang="en">No Pads found.</h4>
+		       		 			<%} else if (pads.length > 0) { %>
+		       		 				<% for(var i = 1; i <= pads.length; i++){%>
+		       		 					<%if (i%2 == 1) {%>
+		       		 						<tr class="odd" id="Pad<%=i%>">
+		       		 							<td class="first"><a class="padClick" href="<%=groupid%>" rel="<%=pads[i-1].name%>"><%= pads[i-1].name%></a></td>
+		       		 							<td class="editDate"><%=pads[i-1].lastedit%></td>
+		       		 							<!--<td><img title="<%=pads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(pads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(pads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td> -->
+		       		 							<td title="Delete Pad" class="last"><img title="<%=pads[i-1].name%>" id = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
+		       		 						</tr>
+		       		 					<%} else {%>
+		       		 						<tr id="Pad<%=i%>">
+		       		 							<td class="first"><a class="padClick" href="<%=groupid%>" rel="<%=pads[i-1].name%>"><%= pads[i-1].name%></a></td>
+		       		 							<td class="editDate"><%=pads[i-1].lastedit%></td>
+		       		 							<!--  <td><img title="<%=pads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(pads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(pads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td>-->
+		       		 							<td title="Delete Pad" class="last"><img title="<%=pads[i-1].name%>" id = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
+		       		 						</tr>
+		       		 					<%}%>
+		       		 				<% } %>	
+		       		 		   <% } %>

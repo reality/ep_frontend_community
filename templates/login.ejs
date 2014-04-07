@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title lang="en">Etherpad</title>
+		<link type="text/css" href="./../../../../static/plugins/ep_frontend_community/static/css/styles.less" rel="stylesheet/less"/>
+		<script src="./../../../../static/plugins/ep_frontend_community/static/js/client/less.js" type="text/javascript"></script>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+		<script src="./../../../../static/plugins/ep_frontend_community/static/js/client/jquery.js" type="text/javascript"></script>
+		<script src="./../../../../static/plugins/ep_frontend_community/static/js/client/documentReadyRefresh.js" type="text/javascript"></script>
+		<script src="./../../../../static/plugins/ep_frontend_community/static/js/client/retina.js" type="text/javascript"></script>
+		<script src="./../../../../static/plugins/ep_frontend_community/static/js/client/login.js" type="text/javascript"></script>
+    </head>
+    <body>
+    	<div id="wrapper">
+			<div id="overlay"></div>
+			<div id="lightBox">
+				<div id="lightBoxHeader">
+					<span class="close"><img src="./../../../../static/plugins/ep_frontend_community/static/images/close-cyan-12.png"></span>
+				</div>
+				<div id="lightBoxMain">
+					<div class="headline">
+				<!-- ckubu changed:
+
+					correct src in img-tag ( from ./static/plugins.. to ./../static/plugins..)
+				-->
+						<img src="./../static/plugins/ep_frontend_community/static/images/user-32.png" class="headlineImage" alt="Login">
+						<h1 lang="en">Login</h1>
+					</div>
+					<div class="content">
+						<div class="overlayLoginArea">
+							<h3 lang="en">Etherpad Account</h3>
+							<button id="loginEtherpad" lang="en">Login</button>
+						</div>
+						<div style="clear:both">
+						</div>
+					</div>
+				</div>
+			</div>
+    	</div>
+    </body>
+</html>

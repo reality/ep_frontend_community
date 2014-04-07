@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title lang="en">Etherpad-Lite</title>
+<link type="text/css"
+	href="./static/plugins/ep_frontend_community/static/css/styles.less"
+	rel="stylesheet/less" />
+<script
+	src="./static/plugins/ep_frontend_community/static/js/client/less.js"
+	type="text/javascript"></script>
+<script
+	src="./static/plugins/ep_frontend_community/static/js/client/jquery.js"
+	type="text/javascript"></script>
+<script
+	src="./static/plugins/ep_frontend_community/static/js/client/retina.js"
+	type="text/javascript"></script>
+<script src="./static/plugins/ep_frontend_community/static/js/client/login.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<header>
+		</header>
+		<div id="main">
+			<div id="title">
+				<span id="mainTitle" lang="en">Etherpad</span> <span id="altTitle"
+					lang="en"></span>
+			<!-- ckubu: added
+
+				Logo on frontpage added
+			-->
+				<img
+					src="./../static/plugins/ep_frontend_community/static/images/logo.png"
+					alt="Etherpad">
+			</div>
+			<div class="inside">
+				<div id="mainIllustration">
+				<!-- ckubu changed:
+
+					correct src in img-tag ( from ./static/plugins.. to ./../static/plugins..)
+				-->
+					<img
+						src="./../static/plugins/ep_frontend_community/static/images/pad-illustration-01.png"
+						alt="Etherpad">
+				</div>
+				<div class="leftArea">
+					<h1 lang="en">Login for Private Group Pads</h1>
+					<h4 lang="en">Login to create and manage Private Groups Pads</h4>
+					<button id="login" lang="en">Login</button>
+					<br>
+					<!-- ckubu: removed
+
+                  remove button to register:
+                     <button id="register" class="register" lang="en">Register</button>
+               -->
+				</div>
+				<div class="rightArea right">
+					<!-- ckubu changed/removed
+
+						change headline from
+							<h1 lang="en">Create/Login Public Pads</h1>
+						to
+							<h1 class="red" lang="en">Public Pads are not allowed</h1>
+
+						remove public Pad Creation
+							<h4 lang="en">Create or open Public Pad. Everyone can see and
+								edit</h4>
+							<button id="createPublicPad" lang="en">Create with Random Name</button>
+							<form>
+							<input type="text" placeholder="Pad-Name" id="padName">
+							<button id="openPublicPad" type="submit" lang="en">Open</button>
+							</form>
+					-->
+					<h1 class="red" lang="en">Public Pads are not allowed</h1>
+				   </div>
+				<div style="clear: both"></div>
+			</div>
+		</div>
+		<footer>
+			<div class="inside">
+				<p lang="en"><a href="./../imprint.html">Imprint</a></p>
+			</div>
+		</footer>
+	</div>
+</body>
+</html>

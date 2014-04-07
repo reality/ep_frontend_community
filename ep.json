@@ -1,0 +1,15 @@
+{
+  "parts": [
+    {
+      "name": "ep_frontend_community",
+      "hooks": {
+        "expressCreateServer": "ep_frontend_community/hooks.js:expressCreateServer",
+        "eejsBlock_styles" : "ep_frontend_community/hooks",
+        "eejsBlock_indexWrapper" : "ep_frontend_community/hooks"
+      },
+      "client_hooks" : {
+                "documentReady" : "ep_frontend_community/static/js/client/frontend_community.js:documentReady"
+      }
+    }
+  ]
+}

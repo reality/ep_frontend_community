@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title lang="en">Etherpad</title>
+		<link type="text/css" href="./static/plugins/ep_frontend_community/static/css/styles.less" rel="stylesheet/less"/>
+		<script src="./static/plugins/ep_frontend_community/static/js/client/less.js" type="text/javascript"></script>
+		<script src="./static/plugins/ep_frontend_community/static/js/client/jquery.js" type="text/javascript"></script>
+				<script src="./static/plugins/ep_frontend_community/static/js/client/documentReadyRefresh.js" type="text/javascript"></script>
+		<script src="./static/plugins/ep_frontend_community/static/js/client/retina.js" type="text/javascript"></script>
+		<script src="./static/plugins/ep_frontend_community/static/js/client/etherpad.js" type="text/javascript"></script>
+    </head>
+    <body>
+    	<div id="wrapper">
+    		 <header>
+    		 	<div class="inside">
+    		 		<nav id="mainMenu">
+	    		 		<ul>
+	    		 			<li><a href="home.html" lang="en">Home</a></li>
+	    		 			<li class="separator">|</li>
+						<!-- ckubu: removed
+							<li><a href="pads.html" lang="en">Public Pads</a></li>
+							<li class="separator">|</li>
+						-->
+						<!-- ckubu: changed
+
+							System Admins will get an other Menue
+
+						-->
+							<% if ( 1  == isadmin ) {%>
+	    		 				<li><span class="active" lang="en">Manage User / Groups</span></li>
+							<% } else { %>
+	    		 				<li><span class="active" lang="en">My Groups</span></li>
+							<% } %>
+	    		 			<li class="separator">|</li>
+	    		 			<li><a href="help.html" lang="en">Help</a></li>
+	    		 		</ul>
+	    		 	</nav>
+	    		 	<nav id="sekMenu">
+	    		 		<ul>
+    		 				<li><a lang="en" id="userProfile"><%= username %></a></li>
+    		 				<li class="separator">|</li>
+    		 				<li><a href="#" lang="en" id = "logout">Logout</a></li>
+    		 			</ul>
+	    		 	</nav>
+				<!-- ckubu changed:
+
+					correct src in img-tag ( from ./static/plugins.. to ./../static/plugins..)
+				-->
+    		 		<img src="./../static/plugins/ep_frontend_community/static/images/logo.png" alt="Etherpad" id="logo">  
+    		 	</div>
+    		 </header>
+       		 <div id="main">
+       		 	<div class="inside">
+	       		 	<div class="leftArea">
+	       		 		<div class="inputBlock">
+							<!-- ckubu: changed
+
+							   Pad Admins are allowed to manage Users
+							-->
+								<% if ( 1  == isadmin ) {%>
+		       		 		<div class="headline">
+		       		 			<img src="./static/plugins/ep_frontend_community/static/images/users-cyan-32.png" class="headlineImage" alt="Create Private Groups"></img><h1 lang="en">Create Private Group</h1>
+		       		 		</div>
+		       		 		<h4 lang="en">Create a new Private Group</h4>
+							<!-- ckubu: changed
+
+								Require a group owner for group creation
+							-->
+		       		 		<form id="createPrivateGroupForm">
+									<label for="groupName">Name of the new Group*</label>
+									<div class="inputField">
+		       		 				<input type="text" placeholder="Group-Name" id="newGroupName" autocomplete="off"></input>
+									</div>
+									<label for="ownerEmail">Owner of the new Group*</label>
+									<div class="inputField">
+										<input type="text" placeholder="Email of the new Owner" id="ownerEmail" autocomplete="off">
+									</div>
+		       		 			<button type="submit" lang="en" id="createPrivateGroup">Create Group</button>
+		       		 		</form>
+								<% } %>
+		       		 	</div>
+		       		 	<div class="inputBlock marginBottom">
+		       		 		<div class="headline">
+		       		 			<img src="./static/plugins/ep_frontend_community/static/images/users-cyan-32.png" class="headlineImage" alt="Register"></img><h1 lang="en">Open Private Groups</h1>
+		       		 		</div>
+		       		 		<h4 lang="en">Manage your Groups</h4>
+		       		 		<%if (groups.length > 0) {%> 
+		       		 			<form style="margin-bottom:5px"><input  type="text" id="search" placeholder="Search"></input></form>
+		       		 			<div class="tableview" style="height: 157px; overflow: hidden">
+								<table>
+		       		 				<% for(var i = 1; i <= groups.length; i++){%>
+		       		 					<%if (i%2 == 1) {%>
+		       		 						<tr class="odd visible" id="Gruppe<%= groups[i-1].groupID%>" data-role="<%= groups[i-1].Role%>">
+		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>"><%= groups[i-1].name%></a></td>
+												<!-- ckubu: changed
+
+													add "Admin" as role
+
+													replaced:
+		       		 							<td class="role"><%if (groups[i-1].Role == 1) {%>Owner<%} else {%>User<%}%></td>
+												-->
+													<td class="role"><%if ( 1  == isadmin ) {%>Admin<%} else if (groups[i-1].Role == 1) {%>Owner<%} else {%>User<%}%></td>
+		       		 							<td title="User Management"><img data-groupname="<%=groups[i-1].name%>" data-groupid="<%=groups[i-1].groupID%>" src="./static/plugins/ep_frontend_community/static/images/users-gold-16.png" class="groupDetails"></img></td>
+		       		 							<%if (groups[i-1].Role == 1 || isadmin) {%>
+		       		 								<td title="Delete Group" class="last"><img data-groupid="<%=groups[i-1].groupID%>" data-name="<%=groups[i-1].name%>" src="./static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></img></td>
+		       		 							<%} else {%>
+		       		 								<td class="last"></td>
+		       		 							<%}%>
+		       		 						</tr>
+		       		 					<%} else {%>
+		       		 						<tr class="visible" id="Gruppe<%= groups[i-1].groupID%>" data-role="<%= groups[i-1].Role%>">
+		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>"><%= groups[i-1].name%></a></td>
+												<!-- ckubu: changed
+
+													add "Admin" as role
+
+													replaced:
+		       		 							<td class="role"><%if (groups[i-1].Role == 1) {%>Owner<%} else {%>User<%}%> </td>
+												-->
+													<td class="role"><%if ( 1  == isadmin ) {%>Admin<%} else if (groups[i-1].Role == 1) {%>Owner<%} else {%>User<%}%></td>
+		       		 							<td title="User Management"><img data-groupname="<%=groups[i-1].name%>" data-groupid="<%=groups[i-1].groupID%>" src="./static/plugins/ep_frontend_community/static/images/users-gold-16.png" class="groupDetails"></img></td>
+		       		 							<%if (groups[i-1].Role == 1 || isadmin) {%>
+		       		 								<td title="Delete Group" class="last"><img data-groupid="<%=groups[i-1].groupID%>" data-name="<%=groups[i-1].name%>" src="./static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></img></td>
+		       		 							<%} else {%>
+		       		 								<td class="last"></td>
+		       		 							<%}%>
+		       		 						</tr>
+		       		 					<%}%>
+		       		 				<% } %>
+								</table>
+								</div>
+								<div class="navigationInfo"><span id="previousPage"><<</span> <span id="currentPage"></span> to <span id="currentPageCount"></span> of <span id="pageCount"></span> Groups <span id="nextPage">>></span></div>
+		       		 		<%} else {%>
+		       		 			<h4 class="red" lang="en">You are in no Group at the moment.</h4>	
+	       		 			<%}%>	
+		       		 	</div>
+	       		 	</div>
+	       		 	<div class="rightArea">
+						<!-- ckubu: added
+
+							Pad Admins are allowed to manage Users
+						-->
+							<% if ( 1  == isadmin ) {%>
+								<div class="inputBlock">
+									<div class="headline">
+										<img src="./static/plugins/ep_frontend_community/static/images/users-cyan-32.png" class="headlineImage" alt="Register"></img><h1 lang="en">Add User to Pad-System</h1>
+									</div>
+		       		 			<h4 lang="en">Add a new User. Afterwords, you can add that User to a certain Group.</h4>
+									<form id="addNewUserForm">
+									<label for="userEmail">User Email*</label>
+									<div class="inputField">
+										<input type="text" placeholder="Email" id="userEmail" autocomplete="off">
+									</div>
+									<label for="userName">Name*</label>
+									<div class="inputField">
+										<input type="text" placeholder="Name" id="userName" autocomplete="off">
+									</div>
+									<label for="userPassword_1">Password*</label>
+									<div class="inputField ">
+										<input type="password" placeholder="Password" id="userPassword_1" autocomplete="off"  class="smallMarginBottom">
+									</div>
+									<div class="inputField marginBottom">
+										<input type="password" placeholder="Confirm Password" id="userPassword_2" autocomplete="off"  class="smallMarginBottom"><br />
+                              <input type="checkbox" id="isAdmin"  name="isAdmin" value="1">System Pad Administrator?<br />
+										<button type="submit" lang="en" id="addNewUser">Add User</button>
+									</div>
+									</form>
+								</div>
+								<div class="inputBlock">
+									<div class="headline">
+										<img src="./static/plugins/ep_frontend_community/static/images/users-cyan-32.png" class="headlineImage" alt="Register"></img><h1 lang="en">Modify User</h1>
+									</div>
+									<form id="modifyUserForm">
+									<label for="modifyUserEmail">User Email*</label>
+									<div class="inputField">
+										<input type="text" placeholder="Email" id="modifyUserEmail" autocomplete="off">
+									</div>
+									<label for="modyfyUserPassword_1">Password</label>
+									<div class="inputField ">
+										<input type="password" placeholder="Password" id="modyfyUserPassword_1" autocomplete="off"  class="smallMarginBottom">
+									</div>
+									<div class="inputField marginBottom">
+										<input type="password" placeholder="Confirm Password" id="modifyUserPassword_2" autocomplete="off"  class="smallMarginBottom"><br />
+                              <input type="checkbox" id="modifyIsAdmin"  name="modifyIsAdmin" value="1">System Pad Administrator?<br />
+										<button type="submit" lang="en" id="modifyUser">Modify User</button>
+									</div>
+									</form>
+								</div>
+								<div class="inputBlock">
+									<div class="headline">
+										<img src="./static/plugins/ep_frontend_community/static/images/users-cyan-32.png" class="headlineImage" alt="Register"></img><h1 lang="en">Delete User from Pad-System</h1>
+									</div>
+									<form id="deleteUserForm">
+									<label for="deleteUserEmail">User Email*</label>
+									<div class="inputField">
+										<input type="text" placeholder="Email" id="deleteUserEmail" autocomplete="off">
+									</div>
+									<div class="inputField marginBottom">
+										<button type="submit" lang="en" id="deleteUser">Delete User</button>
+									</div>
+									</form>
+								</div>
+							<% } else { %>
+						<!-- end ckubu added -->
+	       		 		<img src="./static/plugins/ep_frontend_community/static/images/pad-illustration-private.png" alt="Public Pads" class="padIllustration"></img>
+						<!-- ckubu added (continue if clause) -->
+							<% } %>
+	       		 	</div>
+	       		 	<div style="clear: both"></div>
+       		 	</div>
+       		 </div>
+       		 <footer>
+       		 	<div class="inside">
+       		 		<p lang="en"><a href="./imprint.html">Imprint</a></p>
+       		 	</div>
+       		 </footer>
+       		<script>
+    		$(document).ready(function(){
+				$('#logout').click(function(e){
+    				e.preventDefault();
+    			    
+    				var data = {};
+    				var loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
+    						: 80)
+    						: loc.port, url = loc.protocol + "//"
+    						+ loc.hostname + ":" + port + "/";
+    				
+    				data.location = url;
+    				$.ajax({
+    					type: 'POST',
+    					data: JSON.stringify(data),
+    					contentType: 'application/json',
+    					url: url + 'logout',	
+    					success: function(data) {
+    						window.location = "../index.html";	
+    					},
+    					error: function (xhr, ajaxOptions, thrownError) {
+    						console.log(thrownError);
+    					}
+    				});
+				});
+				
+	   			$(".delete").click(function(){
+    				$("#wrapper").append('<div id="overlay"></div>');
+    				$("#wrapper").append('<div id="lightBox"><div id="lightBoxHeader"><span'+
+    						' class="close"><img src="./static/plugins/ep_frontend_community/static/images/close-cyan-12.png"></span></div><div id="lightBoxMain"><div class='+
+    						'"headline"><img src="./static/plugins/ep_frontend_community/sta'+
+    						'tic/images/close-red-32.png" class="headlineImage" alt="Delete'+
+    						'"></img><h1 lang="en" class="red">Delete "'+$(this).data('name') +'"'+
+    						'</h1></div><div class="content"><button id= "deleteGroup" data-name="'+ $(this).data('name')+'" data-groupid="'+$(this).data('groupid')+'" lang="en" class="margi'+
+    						'nRight">Delete</button><button id="cancelDelete" lang="en">Cancel</button></div>'+
+    						'</div></div>');
+    				$("#lightBox").css("margin-top",-$("#lightBox").height()/2);
+
+    			
+    				$(".close").click(function(){
+    					$("#overlay").remove();
+    					$("#lightBox").remove();
+    				});
+    		   		$("#cancelDelete").click(function(){
+    		   			$("#overlay").remove();
+    		   			$("#lightBox").remove();
+    		   		});
+    		   		
+    		   	 	$("#deleteGroup").click(function(){
+		 		  	    var data = {};
+		 		  	    getBaseURL(1,function(baseurl){
+	    		  			var loc = document.location;
+	    		  			url = baseurl;
+		 		  			data.groupId = $("#deleteGroup").data('groupid');
+		 		  			data.groupName = $("#deleteGroup").data('name');
+
+		 		  			$.ajax({
+		 		  				type: 'POST',
+		 		  				data: JSON.stringify(data),
+		 		  				contentType: 'application/json',
+		 		  				url: url + 'deleteGroup',	
+		 		  				success: function(data) {
+		 		  						if(data.success){
+		 		  							window.location.href = loc;	
+		 		  						}else{
+		 		  							console.log(data.error);
+		 		  						}	
+		 		  				},
+		 		  				error: function (xhr, ajaxOptions, thrownError) {
+		 		  					console.log(thrownError);
+		 		  				}
+		 		  			});
+	 		  	    	});
+ 		  	    	});
+    			}); 
+    		});
+    	</script>
+    	</div>
+    </body>
+</html>

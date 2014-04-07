@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title lang="en">Etherpad</title>
+<link type="text/css"
+	href="./../../../static/plugins/ep_frontend_community/static/css/styles.less"
+	rel="stylesheet/less" />
+<script
+	src="./../../../static/plugins/ep_frontend_community/static/js/client/less.js"
+	type="text/javascript"></script>
+<script
+	src="./../../../static/plugins/ep_frontend_community/static/js/client/jquery.js"
+	type="text/javascript"></script>
+<script
+	src="./../../../static/plugins/ep_frontend_community/static/js/client/retina.js"
+	type="text/javascript"></script>
+<script src="./static/plugins/ep_frontend_community/static/js/client/login.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<header>
+
+		</header>
+		<div id="main">
+			<div id="title">
+				<span id="mainTitle" lang="en">Etherpad</span> <span id="altTitle"
+					lang="en"></span>
+			</div>
+			<div class="inside">
+				<div id="mainIllustration">
+					<img
+						src="./../../../static/plugins/ep_frontend_community/static/images/pad-illustration-01.png"
+						alt="">
+				</div>
+				<div>
+					<h1 lang="en" class="middleArea"><%= msg %></h1>
+				</div>
+				<div style="clear: both"></div>
+			</div>
+		</div>
+		<footer>
+			<div class="inside">
+				<p lang="en"><a href="./../../../imprint.html">Imprint</a></p>
+			</div>
+		</footer>
+	</div>
+	<script>
+	$(document).ready(function(){
+		setTimeout(function(){window.location = "./../../../index.html"}, 5000);
+	});
+	</script>
+</body>
+</html>
