@@ -76,8 +76,8 @@ INSERT INTO `User`
    VALUES (
       1,'admin@example.com',
       '53e8f649c9bfbccf8f8e2b588d05de8ce26f26228a9cc9340cdc8c5f9b1a0d1e',
-      1,1,'Pad System Adminstrator',
-      'fGREpQX1cwnUqv3fsqHPkjP3WtlG1ZsXFFx6v0mR','EYEcciC6Nk',1,0
+      1,0,'Pad System Adminstrator',
+      'fGREpQX1cwnUqv3fsqHPkjP3WtlG1ZsXFFx6v0mR','EYEcciC6Nk',1,1
 );
 ```
 
