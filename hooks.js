@@ -1816,10 +1816,10 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 
                                         support variable isadmin to frontend
                                         */
-                                        isadmin: currUser[0].isAdmin,
+                                        isadmin: null,
                                         username: req.session.username,
                                         groupID: req.params.groupID,
-                                        groupName: currGroup[0].name,
+                                        groupName: null,
                                         padurl: req.session.baseurl + "p/" + req.params.padID
                                     };
                                     res.send(eejs
