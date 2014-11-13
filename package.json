@@ -23,14 +23,14 @@
     "group pads"
   ],
   "author": {
-    "name": "Christoph Kuchenbuch",
-    "email": "ckubu@oopen.de"
+    "name": "Luke Slater",
+    "email": "tinmachin3@gmail.com"
   },
   "license": "GPLv3",
   "bugs": {
-    "url": "https://github.com/ckubu/ep_frontend_community/issues"
+    "url": "https://github.com/reality/ep_frontend_community/issues"
   },
-  "homepage": "https://github.com/ckubu/ep_frontend_community",
+  "homepage": "https://github.com/reality/ep_frontend_community",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
