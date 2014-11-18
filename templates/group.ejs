@@ -69,19 +69,7 @@
        		 		<div class="headlineGroup">
 		       			<img src="./../static/plugins/ep_frontend_community/static/images/users-cyan-64.png" class="headlineGroupImage" alt="GruppeMID<%= id %>"><h1 lang="en"><%= id %></h1>
 		       		</div>
-	       		 	<div class="leftArea">
-	       		 		<div class="inputBlock marginTop">
-		       		 		<div class="headline">
-		       		 			<img src="./../static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Create Private Group Pad"><h1 lang="en">Create Private Group Pad</h1>
-		       		 		</div>
-		       		 		<h4 lang="en">Add a Private Pad to this Group</h4>
-		       		 		<form id="createPrivatePadForm">
-		       		 			<input  type="text" placeholder="Pad-Name" id="createGroupPad" autocomplete="off">
-		       		 			<button data-groupid="<%= groupid %>" type="submit" lang="en" id="createPrivateGroupPad">Create</button>
-		       		 		</form>
-		       		 	</div>
-
-		       		 	<div class="inputBlock marginBottom">
+	       		 	<div class="leftArea" style="width:50%;">
 		       		 		<div class="headline">
 		       		 			<img src="./../static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Register"><h1 lang="en">Manage Private Group Pads</h1>
 		       		 		</div>
@@ -95,12 +83,16 @@
 								to 
 									style="height: 200px"
 							--> 
-							<div class="tableview" style="height: 200px; overflow: hidden">
+							<div class="tableview">
 		       		 		<table id = "tablePads">
 		       		 			<% for(var i = 1; i <= pads.length; i++){%>
 		       		 				<%if (i%2 == 1) {%>
 		       		 					<tr class="odd visible" id="Pad<%=i%>">
-		       		 						<td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=pads[i-1].name%>"><%= pads[i-1].name%></a></td>
+		       		 						<td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=pads[i-1].name%>">
+                                                                                <% if(pads[i-1].safeName) {%> 
+                                                                                  <%=pads[i-1].safeName%> 
+                                                                                <% } else {%> <%=pads[i-1].name %> <% } %>
+                                                                                </a></td>
 		       		 						<td class="editDate"><%=pads[i-1].lastedit%></td>
 		       		 						<!--<td><img title="<%=pads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(pads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(pads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td> -->
 												<!-- ckubu: changed  
@@ -122,7 +114,13 @@
 		       		 					</tr>
 		       		 				<%} else {%>
 		       		 					<tr class="visible" id="Pad<%=i%>">
-		       		 						<td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=pads[i-1].name%>"><%= pads[i-1].name%></a></td>
+		       		 						<td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=pads[i-1].name%>">
+
+                                                                                <% if(pads[i-1].safeName) {%> 
+                                                                                  <%=pads[i-1].safeName%> 
+                                                                                <% } else {%> <%=pads[i-1].name %> <% } %>
+                                                                                </a></td>
+
 		       		 						<td class="editDate"><%=pads[i-1].lastedit%></td>
 		       		 						<!--  <td><img title="<%=pads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(pads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(pads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td>-->
 												<!-- ckubu: changed  
@@ -146,23 +144,26 @@
 		       		 			<% } %>	
 		       		 		</table>
 							</div>
-							<div class="navigationInfo"><span id="previousPage"><<</span> <span id="currentPage"></span> to <span id="currentPageCount"></span> of <span id="pageCount"></span> Pads <span id="nextPage">>></span></div>
 		       		 		<%} else {%>
 		       		 			<h4 class="red" lang="en">There are no Pads in this group at the moment.</h4>	
 		       		 		<% } %>
-		       		 	</div>
 	       		 	</div>
-	       		 	<div class="rightArea">
-	       		 		<img src="./../static/plugins/ep_frontend_community/static/images/pad-illustration-private.png" alt="Public Pads" class="padIllustration">
+	       		 	<div class="rightArea" style="width:30%;">
+	<div class="inputBlock marginTop">
+		       		 		<div class="headline">
+		       		 			<img src="./../static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Create Private Group Pad"><h1 lang="en">Create Private Group Pad</h1>
+		       		 		</div>
+		       		 		<h4 lang="en">Add a Private Pad to this Group</h4>
+		       		 		<form id="createPrivatePadForm">
+		       		 			<input  type="text" placeholder="Pad-Name" id="createGroupPad" autocomplete="off">
+		       		 			<button data-groupid="<%= groupid %>" type="submit" lang="en" id="createPrivateGroupPad">Create</button>
+		       		 		</form>
+		       		 	</div>
+
 	       		 	</div>
 	       		 	<div style="clear: both"></div>
        		 	</div>
        		 </div>
-       		 <footer>
-       		 	<div class="inside">
-       		 		<p lang="en"><a href="./../imprint.html">Imprint</a></p>
-       		 	</div>
-       		 </footer>
        		 <script>
        		var getBaseURL = function(slice,cb){
        			var  loc = document.location, port = loc.port == "" ? (loc.protocol == "https:" ? 443
