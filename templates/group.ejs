@@ -103,6 +103,7 @@
 														if (isowner || pads[i-1].ownerid == userid || isadmin )
 												-->
                                     <% if (isowner || pads[i-1].ownerid == userid || isadmin ) {%>
+		       		 							<td title="Mark Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/star-16.png" class="mark"></td>
 		       		 							<td title="Delete Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
 												<!-- ckubu add
 
@@ -131,6 +132,7 @@
 														if (isowner || pads[i-1].ownerid == userid || isadmin )
 												-->
                                     <% if (isowner || pads[i-1].ownerid == userid || isadmin ) {%>
+		       		 							<td title="Mark Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/star-16.png" class="mark"></td>
 		       		 							<td title="Delete Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
 												<!-- ckubu add
 
@@ -158,6 +160,73 @@
 		       		 			<input  type="text" placeholder="Pad-Name" id="createGroupPad" autocomplete="off">
 		       		 			<button data-groupid="<%= groupid %>" type="submit" lang="en" id="createPrivateGroupPad">Create</button>
 		       		 		</form>
+                                                <br />
+                                                <div class="headline">
+                                                        <img src="./../static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Starred Pads"><h1 lang="en">Starred Pads</h1>
+                                                </div>
+
+                                                <table id = "tablePads">
+                                                        <% for(var i = 1; i <= starredPads.length; i++){%>
+                                                                <%if (i%2 == 1) {%>
+                                                                        <tr class="odd visible" id="Pad<%=i%>">
+                                                                                <td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=starredPads[i-1].name%>">
+                                                                                <% if(starredPads[i-1].safeName) {%>
+                                                                                  <%=starredPads[i-1].safeName%>
+                                                                                <% } else {%> <%=starredPads[i-1].name %> <% } %>
+                                                                                </a></td>
+                                                                                <td class="editDate"><%=starredPads[i-1].lastedit%></td>
+                                                                                <!--<td><img title="<%=starredPads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(starredPads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(starredPads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td> -->
+                                                                                                <!-- ckubu: changed
+
+                                                                                                        changed from
+                                                                                                                if (isowner)
+                                                                                                        to
+                                                                                                                if (isowner || pads[i-1].ownerid == userid || isadmin )
+                                                                                                -->
+                                    <% if (isowner || starredPads[i-1].ownerid == userid || isadmin ) {%>
+                                                                                        <td title="Mark Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/star-16.png" class="mark"></td>
+                                                                                        <td title="Delete Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
+                                                                                                <!-- ckubu add
+
+                                                                                                        add deactivate icom
+                                                                                                -->
+                                    <%} else {%>
+                                       <td title="Only the owner can delete this pad" class="last"><img src="./../static/plugins/ep_frontend_community/static/images/close-cyan-12.png"></td>
+                                    <%}%>
+                                                                        </tr>
+                                                                <%} else {%>
+                                                                        <tr class="visible" id="Pad<%=i%>">
+                                                                                <td class="first"><a class="padClick" data-groupid="<%=groupid%>" data-name="<%=starredPads[i-1].name%>">
+
+                                                                                <% if(starredPads[i-1].safeName) {%>
+                                                                                  <%=starredPads[i-1].safeName%>
+                                                                                <% } else {%> <%=starredPads[i-1].name %> <% } %>
+                                                                                </a></td>
+
+                                                                                <td class="editDate"><%=starredPads[i-1].lastedit%></td>
+                                                                                <!--  <td><img title="<%=starredPads[i-1].name%>" id = "<%= id %>" src="./../static/plugins/ep_frontend_community/static/images/<% if(starredPads[i-1].isProtected) { %>lock-16.png<% }else{ %>unlock-16.png<% } %>" class="<% if(starredPads[i-1].isProtected) { %>lock<% }else{ %>unlock<% } %>"></td>-->
+                                                                                                <!-- ckubu: changed
+
+                                                                                                        changed from
+                                                                                                                if (isowner)
+                                                                                                        to
+                                                                                                                if (isowner || starredPpads[i-1].ownerid == userid || isadmin )
+                                                                                                -->
+                                    <% if (isowner || starredPads[i-1].ownerid == userid || isadmin ) {%>
+                                                                                        <td title="Mark Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/star-16.png" class="mark"></td>
+                                                                                        <td title="Delete Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
+                                                                                                <!-- ckubu add
+
+                                                                                                        add deactivated icon
+                                                                                                -->
+                                    <%} else {%>
+                                       <td title="Only the owner can delete this pad" class="last"><img src="./../static/plugins/ep_frontend_community/static/images/close-cyan-12.png"></td>
+                                    <%}%>
+                                                                        </tr>
+                                                                <%}%>
+                                                        <% } %>
+                                                </table>
+
 		       		 	</div>
 
 	       		 	</div>
@@ -237,9 +306,36 @@
     		  	    });
     			});
 
+                    $(".mark").click(function() {
+                        var $field = $(this);
+                        getBaseURL(2, function(baseUrl) {
+                            var loc = document.location,
+                                url = baseUrl,
+                                data = {};
+                            data.groupId = $field.data('groupid');
+                            data.padName = $field.data('padname');
+
+                            $.ajax({
+                                'type': 'POST',
+                                'data': JSON.stringify(data),
+                                'contentType': 'application/json',
+                                'url': url + 'starPad',
+                                'success': function(data) {
+                                    if(data.success) {
+                                        window.location = loc;
+                                    } else {
+                                        console.log(thrownError);
+                                    }
+                                },
+                                'error': function(xhr, ajaxOptions, thrownError) {
+                                    console.log(thrownError);
+                                }
+                            });
+                        });
+                    });
     		    	
     			
-			});
+                });
 
     	</script>
     	</div>

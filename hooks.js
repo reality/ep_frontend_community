@@ -301,6 +301,7 @@ function getPadsOfGroup(id, padname, cb) {
         connection.pause();
         var pad = {};
         pad.name = foundPads.PadName;
+        pad.starred = foundPads.starred;
         /* ckubu added:
 
            Add OwnerID to array "pad" for use in template "group.ejs" to allow
@@ -705,7 +706,8 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                                         */
                                         isadmin: currUser[0].isAdmin,
                                         isowner: isown,
-                                        pads: pads
+                                        pads: pads,
+                                        starredPads: pads.filter(function(p) {return p.starred == 1;})
                                     };
                                     res.send(eejs.require("ep_frontend_community/templates/group.ejs", render_args));
                                 } else {
@@ -2117,6 +2119,7 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                 return res.send(err);
             }
             userAuthenticated(req, function(authenticated) {
+                var data = {};
                 if(authenticated) {
                     if (!fields.groupId) {
                         sendError('Group-Id not defined', res);
