@@ -2129,38 +2129,18 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                         return;
                     }
 
-                    // Admin and group owner can star pads
-                    isAdmin([req.session.userId], function (isAdmin) {
-                        if (!isAdmin) {
-                            // TODO: Is this async-safe ????
-                            var isOwnerSql = "SELECT * from UserGroup where UserGroup.userId = ? and UserGroup.groupID= ?";
-                            getAllSql(isOwnerSql, [req.session.userId, fields.groupId], function (userGroup) {
-                                if (!(userGroup[0].Role == 1)) {
-                                    var isPadOwner = "SELECT userID FROM GroupPads WHERE PadName = ?";
-                                    getAllSql(isPadOwner, [fields.padName], function (padOwner) {
-                                        log('info', 'padOwner[0].userID = ' + padOwner[0].userID);
-                                        if (undefined == padOwner[0].userID || !(padOwner[0].userID == req.session.userId) ) {
-                                            sendError('User is neither systemadmin, nor role admin nor owner of the pad! Can not update Pad', res);
-                                            return;
-                                    }
-                                    });
-                                }
-                            });
-                        }
-                        getEtherpadGroupFromNormalGroup(fields.groupId, function () {
-                            var starPadSql = "UPDATE GroupPads Set GroupPads.starred = 1 WHERE GroupPads.PadName = ? and GroupPads.GroupID = ?";
-                            var starPadQuery = connection.query(starPadSql, [fields.padName, fields.groupId]);
+                    getEtherpadGroupFromNormalGroup(fields.groupId, function () {
+                        var starPadSql = "UPDATE GroupPads Set GroupPads.starred = 1 WHERE GroupPads.PadName = ? and GroupPads.GroupID = ?";
+                        var starPadQuery = connection.query(starPadSql, [fields.padName, fields.groupId]);
 
-                            starPadQuery.on('error', mySqlErrorHandler);
-                            starPadQuery.on('result', function (pad) {});
-                            starPadQuery.on('end', function () {
-                                data.success = true;
-                                data.error = null;
-                                res.send(data);
-                            });
+                        starPadQuery.on('error', mySqlErrorHandler);
+                        starPadQuery.on('result', function (pad) {});
+                        starPadQuery.on('end', function () {
+                            data.success = true;
+                            data.error = null;
+                            res.send(data);
                         });
                     });
-
                 } else {
                     res.send('You are not logged in!');
                 }
@@ -2168,6 +2148,42 @@ exports.expressCreateServer = function (hook_name, args, cb) {
         });
     });
 
+    // De-mark a pad
+    args.app.post('/destarPad', function(req, res) {
+        new formidable.IncomingForm().parse(req, function(err, fields) {
+            if(err) {
+                log('error', 'formidable parsing error in ' + req.path);
+                return res.send(err);
+            }
+            userAuthenticated(req, function(authenticated) {
+                var data = {};
+                if(authenticated) {
+                    if (!fields.groupId) {
+                        sendError('Group-Id not defined', res);
+                        return;
+                    } else if (!fields.padName) {
+                        sendError('Pad Name not defined', res);
+                        return;
+                    }
+
+                    getEtherpadGroupFromNormalGroup(fields.groupId, function () {
+                        var starPadSql = "UPDATE GroupPads Set GroupPads.starred = 0 WHERE GroupPads.PadName = ? and GroupPads.GroupID = ?";
+                        var starPadQuery = connection.query(starPadSql, [fields.padName, fields.groupId]);
+
+                        starPadQuery.on('error', mySqlErrorHandler);
+                        starPadQuery.on('result', function (pad) {});
+                        starPadQuery.on('end', function () {
+                            data.success = true;
+                            data.error = null;
+                            res.send(data);
+                        });
+                    });
+                } else {
+                    res.send('You are not logged in!');
+                }
+            });
+        });
+    });
     args.app.post('/createPad', function (req, res) {
         new formidable.IncomingForm().parse(req, function (err, fields) {
             if (err) {
