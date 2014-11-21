@@ -2122,6 +2122,7 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                 var data = {};
                 if(authenticated) {
                     if (!fields.groupId) {
+sendError(fields, res);
                         sendError('Group-Id not defined', res);
                         return;
                     } else if (!fields.padName) {

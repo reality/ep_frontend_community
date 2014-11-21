@@ -132,7 +132,7 @@
 														if (isowner || pads[i-1].ownerid == userid || isadmin )
 												-->
                                                                                         <% if(pads[i-1].starred == 1) { %>
-                                                                                            <td title="Mark Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/greystar-16.png" class="demark"></td>
+                                                                                            <td title="Mark Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/gstar-16.png" class="demark"></td>
                                                                                         <% } else { %>
 
                                                                                             <td title="Mark Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/star-16.png" class="mark"></td>
@@ -167,7 +167,7 @@
 		       		 		</form>
                                                 <br />
                                                 <div class="headline">
-                                                        <img src="./../static/plugins/ep_frontend_community/static/images/pad-32.png" class="headlineImage" alt="Starred Pads"><h1 lang="en">Starred Pads</h1>
+                                                        <img src="./../static/plugins/ep_frontend_community/static/images/star-32.png" class="headlineImage" alt="Starred Pads"><h1 lang="en">Starred Pads</h1>
                                                 </div>
 
                                                 <table id = "tablePads">
@@ -188,12 +188,7 @@
                                                                                                         to
                                                                                                                 if (isowner || pads[i-1].ownerid == userid || isadmin )
                                                                                                 -->
-                                    <% if(pads[i-1].starred == 1) { %>
-                                                    <td title="Mark Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/greystar-16.png" class="demark"></td>
-                                                <% } else { %>
-
-                                                    <td title="Mark Pad" class="last"><img data-padname="<%=pads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/star-16.png" class="mark"></td>
-                                                <% } %>
+                                                    <td title="Demark Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/gstar-16.png" class="demark"></td>
                                     <% if (isowner || starredPads[i-1].ownerid == userid || isadmin ) {%>
 
 
@@ -224,8 +219,8 @@
                                                                                                         to
                                                                                                                 if (isowner || starredPpads[i-1].ownerid == userid || isadmin )
                                                                                                 -->
+                                                    <td title="Demark Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/gstar-16.png" class="demark"></td>
                                     <% if (isowner || starredPads[i-1].ownerid == userid || isadmin ) {%>
-                                                                                        <td title="Mark Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/star-16.png" class="mark"></td>
                                                                                         <td title="Delete Pad" class="last"><img data-padname="<%=starredPads[i-1].name%>" data-groupid = "<%= groupid %>" src="./../static/plugins/ep_frontend_community/static/images/close-red-16.png" class="delete"></td>
                                                                                                 <!-- ckubu add
 
@@ -320,17 +315,17 @@
 
                     $(".mark").click(function() {
                         var $field = $(this);
-                        getbaseurl(2, function(baseurl) {
+                        getBaseURL(2, function(baseurl) {
                             var loc = document.location,
                                 url = baseurl,
                                 data = {};
-                            data.groupid = $field.data('groupid');
-                            data.padname = $field.data('padname');
+                            data.groupId = $field.data('groupid');
+                            data.padName = $field.data('padname');
 
                             $.ajax({
-                                'type': 'post',
-                                'data': json.stringify(data),
-                                'contenttype': 'application/json',
+                                'type': 'POST',
+                                'data': JSON.stringify(data),
+                                'contentType': 'application/json',
                                 'url': url + 'starPad',
                                 'success': function(data) {
                                     if(data.success) {
@@ -348,17 +343,17 @@
     		    	
                     $(".demark").click(function() {
                         var $field = $(this);
-                        getbaseurl(2, function(baseurl) {
+                        getBaseURL(2, function(baseurl) {
                             var loc = document.location,
                                 url = baseurl,
                                 data = {};
-                            data.groupid = $field.data('groupid');
-                            data.padname = $field.data('padname');
+                            data.groupId = $field.data('groupid');
+                            data.padName = $field.data('padname');
 
                             $.ajax({
-                                'type': 'post',
-                                'data': json.stringify(data),
-                                'contenttype': 'application/json',
+                                'type': 'POST',
+                                'data': JSON.stringify(data),
+                                'contentType': 'application/json',
                                 'url': url + 'destarPad',
                                 'success': function(data) {
                                     if(data.success) {
