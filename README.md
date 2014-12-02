@@ -106,6 +106,19 @@ Now you can login with credentials:
    password......: admin
 ```
 
+#### Security
+Given this is a closed pad system, there are some additional configuration steps you should take to secure your instance against unauthorised access to pad content.
+
+In the etherpad settings.json, set both the _requireSession_ and _requireAuthorization_ keys to true.
+
+Additionally, for some reason even when these keys are set the etherpad server provides a _public/_ path, which provides read-only full text content for all pads, which can and will be indexed by search engines. You could manually disable this route in the etherpad software, but since I am using Apache to reverse proxy my instances I have personally taken to adding a directive to disable the public path in the VirtualHost defintion:
+
+```
+<Location /public>
+    order deny, allow
+    Deny From All
+</Location>
+```
 
 #### Create a Plugin
 See https://github.com/ether/etherpad-lite/wiki/Creating-a-plugin  [Step 5 Install plugin])
