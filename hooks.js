@@ -1,4 +1,4 @@
-var ERR = require("ep_etherpad-lite/node_modules/async-stacktrace");
+var err = require("ep_etherpad-lite/node_modules/async-stacktrace");
 var express = require('express');
 var eejs = require('ep_etherpad-lite/node/eejs');
 var padManager = require('ep_etherpad-lite/node/db/PadManager');
@@ -39,7 +39,7 @@ var mySqlErrorHandler = function (err) {
     log('debug', 'mySqlErrorHandler');
     // TODO: Review error handling
     var msg;
-    if (fileName in err && lineNumber in err) {
+    if ('fileName' in err && lineNumber in err) {
         msg = 'MySQLError in ' + err.fileName + ' line ' + err.lineNumber + ': ';
     } else {
         msg = 'MySQLError: ';
@@ -314,6 +314,7 @@ function getPadsOfGroup(id, padname, cb) {
                 log('debug', 'getEtherpadGroupFromNormalGroup cb');
                 padManager.getPad(group + "$" + pad.name, null, function (err, origPad) {
                     if (err) log('error', err);
+if(origPad) {
                     pad.isProtected = origPad.isPasswordProtected();
                     origPad.getLastEdit(function (err, lastEdit) {
                         pad.lastedit = converterPad(lastEdit);
@@ -324,6 +325,9 @@ function getPadsOfGroup(id, padname, cb) {
                             connection.resume();
                         });
                     });
+} else {
+connection.resume();
+}
                 });
 
             });
@@ -2215,12 +2219,12 @@ sendError(fields, res);
                                   ALTER TABLE GroupPads ADD COLUMN UserID int NOT NULL DEFAULT 1 FIRST;
 
                                replaced:
-                               var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?)";
-                               var addPadToGroupQuery = connection.query(addPadToGroupSql, [fields.groupId, fields.padName]);
+                               var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?, ?)";
+                               var addPadToGroupQuery = connection.query(addPadToGroupSql, [fields.groupId, fields.padName, 0]);
                                with:
                             */
-                            var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?, ?)";
-                            var addPadToGroupQuery = connection.query(addPadToGroupSql, [req.session.userId, fields.groupId, fields.padName]);
+                            var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?, ?, ?)";
+                            var addPadToGroupQuery = connection.query(addPadToGroupSql, [req.session.userId, fields.groupId, fields.padName, 0]);
                             addPadToGroupQuery.on('error', mySqlErrorHandler);
                             addPadToGroupQuery.on('end', function () {
                                 addPadToEtherpad(fields.padName, fields.groupId, function () {
