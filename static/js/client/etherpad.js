@@ -1073,7 +1073,7 @@ $(document).ready(function() {
 	
 	$('#search').keyup(function(){
 		/// search
-    	$(".inputBlock table tr").each(function(){
+    	$("table#tablePads tr").each(function(){
     		if($(this).children("td.first").children("a").html().match($("#search").val())) {
     			$(this).show();
     			$(this).addClass("visible")
@@ -1123,7 +1123,7 @@ $(document).ready(function() {
 	 
 	rowsize = 6;
     			
-    initPaging(rowsize);
+    //initPaging(rowsize);
     			
     // jump to the next page
     $("#nextPage").click(function(){
@@ -1485,7 +1485,7 @@ $(document).ready(function() {
 	});
 
 
-	$('.padClick').click(function(e){
+	$('.padClick').mousedown(function(e){
 		e.preventDefault();
 		var groupId = $(this).data('groupid');
 		var padname = $(this).data('name');
@@ -1498,7 +1498,11 @@ $(document).ready(function() {
 			data.padname = padname;
 			post(data, url+'directToPad' ,function(data){
 				document.cookie = "sessionID="+ data.session +"; path=/";
-				window.location = window.location + "/pad.html/" + data.group + "$" + data.pad_name;
+				if(e.which == 1) {
+					window.location = window.location + "/pad.html/" + data.group + "$" + data.pad_name;
+				} else if(e.which == 2) {
+					var n = window.open(window.location + "/pad.html/" + data.group + "$" + data.pad_name, '_blank');
+				}
 			});
 		});
 	});

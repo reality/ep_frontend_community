@@ -301,6 +301,7 @@ function getPadsOfGroup(id, padname, cb) {
         connection.pause();
         var pad = {};
         pad.name = foundPads.PadName;
+        pad.starred = foundPads.starred;
         /* ckubu added:
 
            Add OwnerID to array "pad" for use in template "group.ejs" to allow
@@ -316,10 +317,15 @@ function getPadsOfGroup(id, padname, cb) {
                     pad.isProtected = origPad.isPasswordProtected();
                     origPad.getLastEdit(function (err, lastEdit) {
                         pad.lastedit = converterPad(lastEdit);
-                        allPads.push(pad);
-                        connection.resume();
+
+                        db.get("title:"+group+"$"+pad.name, function(err, value){
+                            if(value) pad.safeName = value;
+                            allPads.push(pad);
+                            connection.resume();
+                        });
                     });
                 });
+
             });
         } else {
             connection.resume();
@@ -700,7 +706,8 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                                         */
                                         isadmin: currUser[0].isAdmin,
                                         isowner: isown,
-                                        pads: pads
+                                        pads: pads,
+                                        starredPads: pads.filter(function(p) {return p.starred == 1;})
                                     };
                                     res.send(eejs.require("ep_frontend_community/templates/group.ejs", render_args));
                                 } else {
@@ -2104,6 +2111,80 @@ exports.expressCreateServer = function (hook_name, args, cb) {
         });
     });
 
+    // Mark a pad as important
+    args.app.post('/starPad', function(req, res) {
+        new formidable.IncomingForm().parse(req, function(err, fields) {
+            if(err) {
+                log('error', 'formidable parsing error in ' + req.path);
+                return res.send(err);
+            }
+            userAuthenticated(req, function(authenticated) {
+                var data = {};
+                if(authenticated) {
+                    if (!fields.groupId) {
+sendError(fields, res);
+                        sendError('Group-Id not defined', res);
+                        return;
+                    } else if (!fields.padName) {
+                        sendError('Pad Name not defined', res);
+                        return;
+                    }
+
+                    getEtherpadGroupFromNormalGroup(fields.groupId, function () {
+                        var starPadSql = "UPDATE GroupPads Set GroupPads.starred = 1 WHERE GroupPads.PadName = ? and GroupPads.GroupID = ?";
+                        var starPadQuery = connection.query(starPadSql, [fields.padName, fields.groupId]);
+
+                        starPadQuery.on('error', mySqlErrorHandler);
+                        starPadQuery.on('result', function (pad) {});
+                        starPadQuery.on('end', function () {
+                            data.success = true;
+                            data.error = null;
+                            res.send(data);
+                        });
+                    });
+                } else {
+                    res.send('You are not logged in!');
+                }
+            });
+        });
+    });
+
+    // De-mark a pad
+    args.app.post('/destarPad', function(req, res) {
+        new formidable.IncomingForm().parse(req, function(err, fields) {
+            if(err) {
+                log('error', 'formidable parsing error in ' + req.path);
+                return res.send(err);
+            }
+            userAuthenticated(req, function(authenticated) {
+                var data = {};
+                if(authenticated) {
+                    if (!fields.groupId) {
+                        sendError('Group-Id not defined', res);
+                        return;
+                    } else if (!fields.padName) {
+                        sendError('Pad Name not defined', res);
+                        return;
+                    }
+
+                    getEtherpadGroupFromNormalGroup(fields.groupId, function () {
+                        var starPadSql = "UPDATE GroupPads Set GroupPads.starred = 0 WHERE GroupPads.PadName = ? and GroupPads.GroupID = ?";
+                        var starPadQuery = connection.query(starPadSql, [fields.padName, fields.groupId]);
+
+                        starPadQuery.on('error', mySqlErrorHandler);
+                        starPadQuery.on('result', function (pad) {});
+                        starPadQuery.on('end', function () {
+                            data.success = true;
+                            data.error = null;
+                            res.send(data);
+                        });
+                    });
+                } else {
+                    res.send('You are not logged in!');
+                }
+            });
+        });
+    });
     args.app.post('/createPad', function (req, res) {
         new formidable.IncomingForm().parse(req, function (err, fields) {
             if (err) {
