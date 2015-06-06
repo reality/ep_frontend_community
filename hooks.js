@@ -2044,6 +2044,15 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                         res.send(data);
                         return false;
                     }
+                    if(fields.groupName.length > 250) {
+                        log('debug', 'Pad name too long.');
+                        data.success = false;
+                        data.error = 'Group name is too long (255 chars max).';
+                        data.field = 'newGroupName';
+                        res.send(data);
+                        return false;
+                    }
+                    }
                     /* ckubu:
 
                         - Allow only admins to create new groups
@@ -2203,6 +2212,9 @@ sendError(fields, res);
                         return;
                     } else if (!fields.padName) {
                         sendError('Pad Name not defined', res);
+                        return;
+                    } else if (fields.padName.length > 50) {
+                        sendError('Pad name is too long (max 50 chars).', res);
                         return;
                     }
                     var existPadInGroupSql = "SELECT * from GroupPads where GroupPads.GroupID = ? and GroupPads.PadName = ?";

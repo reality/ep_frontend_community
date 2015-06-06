@@ -92,7 +92,13 @@
 		       		 				<% for(var i = 1; i <= groups.length; i++){%>
 		       		 					<%if (i%2 == 1) {%>
 		       		 						<tr class="odd visible" id="Gruppe<%= groups[i-1].groupID%>" data-role="<%= groups[i-1].Role%>">
-		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>"><%= groups[i-1].name%></a></td>
+		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>">
+                                                                                                <% if(groups[i-1].name.length > 95) { %>
+                                                                                                        <%= groups[i-1].name.substring(0, 90) %>...
+                                                                                                <% } else { %>
+                                                                                                        <%= groups[i-1].name%>
+                                                                                                <% } %>
+                                                                                        </a></td>
 												<!-- ckubu: changed
 
 													add "Admin" as role
@@ -110,7 +116,13 @@
 		       		 						</tr>
 		       		 					<%} else {%>
 		       		 						<tr class="visible" id="Gruppe<%= groups[i-1].groupID%>" data-role="<%= groups[i-1].Role%>">
-		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>"><%= groups[i-1].name%></a></td>
+		       		 							<td class="first"><a href="group.html/<%= groups[i-1].groupID%>">
+                                                                                                <% if(groups[i-1].name.length > 95) { %>
+                                                                                                        <%= groups[i-1].name.substring(0, 90) %>...
+                                                                                                <% } else { %>
+                                                                                                        <%= groups[i-1].name%>
+                                                                                                <% } %>
+                                                                                        </a></td>
 												<!-- ckubu: changed
 
 													add "Admin" as role
