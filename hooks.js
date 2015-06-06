@@ -1,4 +1,4 @@
-var ERR = require("ep_etherpad-lite/node_modules/async-stacktrace");
+var err = require("ep_etherpad-lite/node_modules/async-stacktrace");
 var express = require('express');
 var eejs = require('ep_etherpad-lite/node/eejs');
 var padManager = require('ep_etherpad-lite/node/db/PadManager');
@@ -39,7 +39,7 @@ var mySqlErrorHandler = function (err) {
     log('debug', 'mySqlErrorHandler');
     // TODO: Review error handling
     var msg;
-    if (fileName in err && lineNumber in err) {
+    if ('fileName' in err && lineNumber in err) {
         msg = 'MySQLError in ' + err.fileName + ' line ' + err.lineNumber + ': ';
     } else {
         msg = 'MySQLError: ';
@@ -301,6 +301,7 @@ function getPadsOfGroup(id, padname, cb) {
         connection.pause();
         var pad = {};
         pad.name = foundPads.PadName;
+        pad.starred = foundPads.starred;
         /* ckubu added:
 
            Add OwnerID to array "pad" for use in template "group.ejs" to allow
@@ -313,13 +314,22 @@ function getPadsOfGroup(id, padname, cb) {
                 log('debug', 'getEtherpadGroupFromNormalGroup cb');
                 padManager.getPad(group + "$" + pad.name, null, function (err, origPad) {
                     if (err) log('error', err);
+if(origPad) {
                     pad.isProtected = origPad.isPasswordProtected();
                     origPad.getLastEdit(function (err, lastEdit) {
                         pad.lastedit = converterPad(lastEdit);
-                        allPads.push(pad);
-                        connection.resume();
+
+                        db.get("title:"+group+"$"+pad.name, function(err, value){
+                            if(value) pad.safeName = value;
+                            allPads.push(pad);
+                            connection.resume();
+                        });
                     });
+} else {
+connection.resume();
+}
                 });
+
             });
         } else {
             connection.resume();
@@ -700,7 +710,8 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                                         */
                                         isadmin: currUser[0].isAdmin,
                                         isowner: isown,
-                                        pads: pads
+                                        pads: pads,
+                                        starredPads: pads.filter(function(p) {return p.starred == 1;})
                                     };
                                     res.send(eejs.require("ep_frontend_community/templates/group.ejs", render_args));
                                 } else {
@@ -2104,6 +2115,80 @@ exports.expressCreateServer = function (hook_name, args, cb) {
         });
     });
 
+    // Mark a pad as important
+    args.app.post('/starPad', function(req, res) {
+        new formidable.IncomingForm().parse(req, function(err, fields) {
+            if(err) {
+                log('error', 'formidable parsing error in ' + req.path);
+                return res.send(err);
+            }
+            userAuthenticated(req, function(authenticated) {
+                var data = {};
+                if(authenticated) {
+                    if (!fields.groupId) {
+sendError(fields, res);
+                        sendError('Group-Id not defined', res);
+                        return;
+                    } else if (!fields.padName) {
+                        sendError('Pad Name not defined', res);
+                        return;
+                    }
+
+                    getEtherpadGroupFromNormalGroup(fields.groupId, function () {
+                        var starPadSql = "UPDATE GroupPads Set GroupPads.starred = 1 WHERE GroupPads.PadName = ? and GroupPads.GroupID = ?";
+                        var starPadQuery = connection.query(starPadSql, [fields.padName, fields.groupId]);
+
+                        starPadQuery.on('error', mySqlErrorHandler);
+                        starPadQuery.on('result', function (pad) {});
+                        starPadQuery.on('end', function () {
+                            data.success = true;
+                            data.error = null;
+                            res.send(data);
+                        });
+                    });
+                } else {
+                    res.send('You are not logged in!');
+                }
+            });
+        });
+    });
+
+    // De-mark a pad
+    args.app.post('/destarPad', function(req, res) {
+        new formidable.IncomingForm().parse(req, function(err, fields) {
+            if(err) {
+                log('error', 'formidable parsing error in ' + req.path);
+                return res.send(err);
+            }
+            userAuthenticated(req, function(authenticated) {
+                var data = {};
+                if(authenticated) {
+                    if (!fields.groupId) {
+                        sendError('Group-Id not defined', res);
+                        return;
+                    } else if (!fields.padName) {
+                        sendError('Pad Name not defined', res);
+                        return;
+                    }
+
+                    getEtherpadGroupFromNormalGroup(fields.groupId, function () {
+                        var starPadSql = "UPDATE GroupPads Set GroupPads.starred = 0 WHERE GroupPads.PadName = ? and GroupPads.GroupID = ?";
+                        var starPadQuery = connection.query(starPadSql, [fields.padName, fields.groupId]);
+
+                        starPadQuery.on('error', mySqlErrorHandler);
+                        starPadQuery.on('result', function (pad) {});
+                        starPadQuery.on('end', function () {
+                            data.success = true;
+                            data.error = null;
+                            res.send(data);
+                        });
+                    });
+                } else {
+                    res.send('You are not logged in!');
+                }
+            });
+        });
+    });
     args.app.post('/createPad', function (req, res) {
         new formidable.IncomingForm().parse(req, function (err, fields) {
             if (err) {
@@ -2137,12 +2222,12 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                                   ALTER TABLE GroupPads ADD COLUMN UserID int NOT NULL DEFAULT 1 FIRST;
 
                                replaced:
-                               var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?)";
-                               var addPadToGroupQuery = connection.query(addPadToGroupSql, [fields.groupId, fields.padName]);
+                               var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?, ?)";
+                               var addPadToGroupQuery = connection.query(addPadToGroupSql, [fields.groupId, fields.padName, 0]);
                                with:
                             */
-                            var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?, ?)";
-                            var addPadToGroupQuery = connection.query(addPadToGroupSql, [req.session.userId, fields.groupId, fields.padName]);
+                            var addPadToGroupSql = "INSERT INTO GroupPads VALUES(?, ?, ?, ?)";
+                            var addPadToGroupQuery = connection.query(addPadToGroupSql, [req.session.userId, fields.groupId, fields.padName, 0]);
                             addPadToGroupQuery.on('error', mySqlErrorHandler);
                             addPadToGroupQuery.on('end', function () {
                                 addPadToEtherpad(fields.padName, fields.groupId, function () {
