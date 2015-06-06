@@ -2119,6 +2119,9 @@ exports.expressCreateServer = function (hook_name, args, cb) {
                     } else if (!fields.padName) {
                         sendError('Pad Name not defined', res);
                         return;
+                    } else if (fields.padName.length > 50) {
+                        sendError('Pad name is too long (max 50 chars).', res);
+                        return;
                     }
                     var existPadInGroupSql = "SELECT * from GroupPads where GroupPads.GroupID = ? and GroupPads.PadName = ?";
                     getOneValueSql(existPadInGroupSql, [fields.groupId, fields.padName], function (found) {
